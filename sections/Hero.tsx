@@ -21,7 +21,9 @@ const Hero = () => {
   let [itinerary, setItinerary] = useState<string>('')
   const [loading, setLoading] = useState(false)
   const [toast, setToast] = useState<{show: boolean, msg: string, type: string}>({show:false, msg:'', type:'error' })
-  const [message, setMessage] = useState('')
+  const [message, setMessage] = useState('');
+  const [apiKey, setApiKey] = useState('');
+  const [apiKeyPopup, setApiKeyPopup] = useState(true);
   
 
   async function hitAPI() {
@@ -47,7 +49,8 @@ const Hero = () => {
         method: 'POST',
         body: JSON.stringify({
           days: request.days,
-          city: request.city
+          city: request.city,
+          apiKey : apiKey,
         }),
         timeout: 20000
       } as any)
@@ -57,6 +60,7 @@ const Hero = () => {
         method: 'POST',
         body: JSON.stringify({
           pointsOfInterestPrompt: json.pointsOfInterestPrompt,
+          apiKey : apiKey,
         }),
         timeout: 20000
       } as any)
@@ -94,6 +98,23 @@ const Hero = () => {
 
     {toast.show && <ToastMessage message={toast.msg} type={'success'} />}
 
+
+
+    {apiKeyPopup && <div className={`${styles.flexCenter} fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-screen h-screen bg-primary-grey-28 bg-opacity-50 z-30`} >
+
+      <form className={` ${styles.flexCenter} flex-col gap-8 fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-sm overflow-hidden w-64 shadow-md bg-primary-grey-14 p-8`}>
+        <h1 className={` text-lg font-bold mb-2 `}>Insert OpenAi API key</h1>
+
+        <label aria-label='City' className={` primary_label_form `}>
+            <input required type="text" placeholder='API key' className='search_input' onChange={(e) => setApiKey(e.target.value)} />
+        </label>
+        <button aria-label="Search bar button" type="button" onClick={() => setApiKeyPopup(false)} className={`w-full rounded p-4 bg-accent-color-77 hover:bg-accent-color-71 text-secondary-white transition-all ${styles.flexCenter}`} >
+            Close
+        </button>
+      </form>
+      
+    </div>}
+
     <form onSubmit={hitAPI} className={` relative ${styles.flexBetween} gap-6 flex-col w-full `}>
           <label aria-label='City' className={` primary_label_form `}>
               <input required type="text" placeholder='City' onChange={e => setRequest(request => ({
@@ -107,7 +128,7 @@ const Hero = () => {
           </label>
           
           <button aria-label="Search bar button" type="button" onClick={hitAPI} className={`w-full rounded p-4 bg-accent-color-77 hover:bg-accent-color-71 text-secondary-white transition-all ${styles.flexCenter}`} >
-              Get travel journey<SolidSvg width={'24px'} height={'24px'} className={'SVGB2W scale-110'} color={'#fff'} path={'/send.svg'} />
+              Get travel journey <SolidSvg width={'24px'} height={'24px'} className={' scale-110'} color={'#fff'} path={'/send.svg'} />
           </button>
     </form>
 

@@ -11,20 +11,23 @@ type Error = {
   message: string,
 }
 
-const OPENAI_API_KEY = process.env.OPENAI_API_KEY
+// const OPENAI_API_KEY = process.env.OPENAI_API_KEY
 
-const headers = {
-  'Content-Type': 'application/json',
-  'Authorization': `Bearer ${OPENAI_API_KEY}`
-}
 
 export default async function handler( req: NextApiRequest, res: NextApiResponse<Data | string> ) {
   let days = 4, city = 'Marrakech'
+  let apiKey = '';
   
   if (req.body) {
     let body = JSON.parse(req.body)
     days = body.days
     city = body.city
+    apiKey = body.apiKey
+  }
+
+  const headers = {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${apiKey || process.env.OPENAI_API_KEY}`
   }
 
   const parts = city.split(' ')
